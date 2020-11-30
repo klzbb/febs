@@ -90,9 +90,7 @@ public class GlobalExceptionHandler {
         }else{
             message.append(e.getMessage());
         }
-
         return new FebsResponse().message(message.toString()).code(Code.C400.getCode().toString()).status(ResponseStat.ERROR.getText());
-
     }
 
     @ExceptionHandler(value = LimitAccessException.class)

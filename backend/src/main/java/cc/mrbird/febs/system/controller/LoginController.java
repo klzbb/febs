@@ -63,20 +63,20 @@ public class LoginController {
         username = StringUtils.lowerCase(username);
         try {
             password = MD5Util.encrypt(username, AesEncryptUtil.desEncrypt(password));
-        }catch (Exception e){
-            log.error("解密密码过程出错",e);
+        } catch (Exception e) {
+            log.error("解密密码过程出错", e);
         }
 
         final String errorMessage = "用户名或密码错误";
         User user = this.userManager.getUser(username);
 
-        if (user == null||password == null){
+        if (user == null || password == null) {
             throw new FebsException(errorMessage);
         }
-        if (!StringUtils.equals(user.getPassword(), password)){
+        if (!StringUtils.equals(user.getPassword(), password)) {
             throw new FebsException(errorMessage);
         }
-        if (User.STATUS_LOCK.equals(user.getStatus())){
+        if (User.STATUS_LOCK.equals(user.getStatus())) {
             throw new FebsException("账号已被锁定,请联系管理员！");
         }
 
@@ -96,7 +96,7 @@ public class LoginController {
         user.setId(userId);
 
         Map<String, Object> userInfo = this.generateUserInfo(jwtToken, user);
-        return new FebsResponse().addCodeMessage(Code.C200.getCode(),"认证成功",Code.C200.getDesc(),userInfo);
+        return new FebsResponse().addCodeMessage(Code.C200.getCode(), "认证成功", Code.C200.getDesc(), userInfo);
     }
 
     @GetMapping("index/{username}")
@@ -129,7 +129,7 @@ public class LoginController {
             ActiveUser activeUser = mapper.readValue(userOnlineString, ActiveUser.class);
             activeUser.setToken(null);
             if (StringUtils.isNotBlank(username)) {
-                if (StringUtils.equalsIgnoreCase(username, activeUser.getUsername())){
+                if (StringUtils.equalsIgnoreCase(username, activeUser.getUsername())) {
                     activeUsers.add(activeUser);
                 }
             } else {
@@ -165,7 +165,7 @@ public class LoginController {
     public FebsResponse logout(@NotBlank(message = "{required}") @PathVariable String id) throws Exception {
         try {
             this.kickout(id);
-            return new FebsResponse().addCodeMessage(Code.C200.getCode(),"退出系统成功",Code.C200.getDesc());
+            return new FebsResponse().addCodeMessage(Code.C200.getCode(), "退出系统成功", Code.C200.getDesc());
         } catch (Exception e) {
             String message = "退出系统失败";
             log.error(message, e);
